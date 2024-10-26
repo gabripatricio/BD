@@ -19,7 +19,7 @@ class Discente(Pessoa):
         self.status = status
         self.anoMatricula = anoMatricula
         self.CR = CR
-        
+
     def mostrar_informacoes(self):
         print("=== Informações do Discente ===")
         print(f"Nome: {self.nome}")
@@ -125,7 +125,7 @@ def gerar_nome():
 def gerar_idade_aluno():
     pesos = [5 for _ in range(18, 26)] + [1 for _ in range(26, 61)]
     return random.choices(range(18, 61), weights=pesos, k=1)[0]
-    
+
 def cria_docente():
     cpf = gerador_de_cpf()
     idade = gerar_idade_prof()
@@ -143,14 +143,14 @@ def cria_discente():
     nacionalidade = gerar_nacionalidade()
 
     renda = random.randint(800, 10000)
-    pcd = "Sim" if random.random() < 0.05 else "Não" # 5% pcds
+    pcd = "TRUE" if random.random() < 0.05 else "FALSE" # 5% pcds
     financiamento = random.random() < 0.10 # 10% tem bolsa
-    codigoEmec = random.randint(1000, 9999)
+    codigoEmec = random.randint(1000, 1383)
     status = random.choices(
         ['Ativo', 'Formado', 'Jubilado', 'Inativo'], 
         weights=[77, 14, 3, 6], 
         k=1)[0]
-    
+
     anoMatricula = random.randint(2015, 2023)
     CR = round(random.normalvariate(6.8, 1.2), 2)
     return Discente(cpf, idade, raca, genero, nacionalidade, nome, renda, pcd, financiamento, codigoEmec, status, anoMatricula, CR)
@@ -158,14 +158,14 @@ def cria_discente():
 def escreve_docentes():
     with open("docentes_sql.txt", "w") as arquivo:
         lista = []
-        for i in range(10000):
+        for i in range(3000):
             docente = cria_docente()
             while docente.cpf in lista:
                 docente = cria_docente
             lista.append(docente.cpf)
 
             arquivo.write(
-                "INSERT INTO DOCENTE (nome, cpf, genero, idade, raca, nacionalidade, titularidade) "
+                "INSERT INTO DOCENTE (nome, cpf, gênero, idade, raça, nacionalidade, titularidade) "
                 f"VALUES ('{docente.nome}', '{docente.cpf}', '{docente.genero}', {docente.idade}, "
                 f"'{docente.raca}', '{docente.nacionalidade}', '{docente.titularidade}');\n"
             )
@@ -175,14 +175,14 @@ def escreve_docentes():
 def escreve_discentes(lista_cpfs):     
     with open("discentes_sql.txt", "w") as arquivo:
         lista = []
-        for i in range(200000):
+        for i in range(12000):
             discente = cria_discente()
             while discente.cpf in lista or discente.cpf in lista_cpfs:
                 discente = cria_discente()
             lista.append(discente.cpf)
             arquivo.write(
-                "INSERT INTO DISCENTE (nome, cpf, genero, idade, raca, nacionalidade, renda, pcd, "
-                f"financiamento, codigoEmec, status, anoMatricula, CR) "
+                "INSERT INTO DISCENTE (nome, cpf, gênero, idade, raça, nacionalidade, rendafamiliar, pcd, "
+                f"financiamento, codigoemeccurso, status, anomatricula, cracumulado) "
                 f"VALUES ('{discente.nome}', '{discente.cpf}', '{discente.genero}', {discente.idade}, "
                 f"'{discente.raca}', '{discente.nacionalidade}', {discente.renda}, '{discente.pcd}', "
                 f"{'1' if discente.financiamento else '0'}, {discente.codigoEmec}, '{discente.status}', "
@@ -190,12 +190,17 @@ def escreve_discentes(lista_cpfs):
             )
         print("Todos os discentes foram criados com sucesso.")
 
-def main():
-    #Fazendo um elemento da classe Docente
-    #Quando for rodar, retirar o comentário
+def escreve_leciona_no(lista_cpfs):
+    with open("leciona_no_sql.txt", "w") as arquivo:
+        for i in range(len(lista_cpfs)):
+            numero_aleatorio = random.randint(1, 203)
+            arquivo.write(f"INSERT INTO LECIONA_NO (cpf, codigoemeccurso) VALUES ('{lista_cpfs[i]}', {numero_aleatorio});\n")
+        
     
+def main():
     cpfs = escreve_docentes()
     escreve_discentes(cpfs)
+    escreve_leciona_no(cpfs)
 
 if __name__ == '__main__':
     main()
