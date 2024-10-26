@@ -24,7 +24,7 @@ class Docente(Pessoa):
     def __init__(self, cpf, idade, raca, genero, nacionalidade, nome, titularidade):
         super().__init__(cpf, idade, raca, genero, nacionalidade, nome)
         self.titularidade = titularidade
-    
+
     def mostrar_informacoes(self):
         print("=== Informações do Docente ===")
         print(f"Nome: {self.nome}")
@@ -52,7 +52,7 @@ def gerar_nacionalidade():
     else:
         nacionalidades = ['Portugal', 'Argentina', 'Colombia', 'Mexico', 'Franca', 'Alemanha', 'Austria', 'EUA', 'Japao', 'China', 'Russia' ]
         return random.choice(nacionalidades)
-    
+
 def gerar_idade_prof():
     pesos = [1 if 30 <= i < 50 or 60 < i <= 75 else 5 for i in range(30, 76)]
     return random.choices(range(30, 76), weights=pesos, k=1)[0]
@@ -94,16 +94,16 @@ def gerar_nome():
     else:
         nome = random.choice(nomes_femininos)
         genero = 'F'
-    
+
     sobrenome1 = random.choice(sobrenomes)
     sobrenome2 = random.choice(sobrenomes)
-    
+
     # Garantir que os dois sobrenomes sejam diferentes
     while sobrenome1 == sobrenome2:
         sobrenome2 = random.choice(sobrenomes)
-    
+
     nome_completo = f"{nome} {sobrenome1} {sobrenome2}"
-    
+
     return nome_completo, genero
 
 def cria_docente():
@@ -115,12 +115,27 @@ def cria_docente():
     titularidade = gerar_titularidade()
     return Docente(cpf, idade, raca, genero, nacionalidade, nome, titularidade)
 
+def escreve_docentes():
+    with open("docentes_sql.txt", "w") as arquivo:
+        lista = []
+        for i in range(10000):
+            docente = cria_docente()
+            while docente.cpf in lista:
+                docente = cria_docente
+            lista.append(docente.cpf)
+            
+            arquivo.write(
+                "INSERT INTO DOCENTE (nome, cpf, genero, idade, raca, nacionalidade, titularidade) "
+                f"VALUES ('{docente.nome}', '{docente.cpf}', '{docente.genero}', {docente.idade}, "
+                f"'{docente.raca}', '{docente.nacionalidade}', '{docente.titularidade}');\n"
+            )
+    print("Todos os 10000 docentes foram criados.")
+
 def main():
     #Fazendo um elemento da classe Docente
-    docente = cria_docente()
-    docente.mostrar_informacoes()
-        
-    
+    escreve_docentes()
+
+
 
 if __name__ == '__main__':
     main()
