@@ -193,7 +193,7 @@ def escreve_discentes(lista_cpfs):
 def escreve_leciona_no(lista_cpfs):
     with open("leciona_no_sql.txt", "w") as arquivo:
         for i in range(len(lista_cpfs)):
-            numero_aleatorio = random.randint(1, 203)
+            numero_aleatorio = random.randint(1300, 1383)
             arquivo.write(f"INSERT INTO LECIONA_NO (cpf, codigoemeccurso) VALUES ('{lista_cpfs[i]}', {numero_aleatorio});\n")
         
     
