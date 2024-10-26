@@ -19,6 +19,22 @@ class Discente(Pessoa):
         self.status = status
         self.anoMatricula = anoMatricula
         self.CR = CR
+        
+    def mostrar_informacoes(self):
+        print("=== Informações do Discente ===")
+        print(f"Nome: {self.nome}")
+        print(f"CPF: {self.cpf}")
+        print(f"Idade: {self.idade} anos")
+        print(f"Raça: {self.raca}")
+        print(f"Gênero: {self.genero}")
+        print(f"Nacionalidade: {self.nacionalidade}")
+        print(f"Renda: R$ {self.renda:.2f}")
+        print(f"PCD: {self.pcd}")
+        print(f"Financiamento: {'Sim' if self.financiamento else 'Não'}")
+        print(f"Código EMEC: {self.codigoEmec}")
+        print(f"Status: {self.status}")
+        print(f"Ano de Matrícula: {self.anoMatricula}")
+        print(f"Coeficiente de Rendimento (CR): {self.CR}")
 
 class Docente(Pessoa):
     def __init__(self, cpf, idade, raca, genero, nacionalidade, nome, titularidade):
@@ -106,6 +122,10 @@ def gerar_nome():
 
     return nome_completo, genero
 
+def gerar_idade_aluno():
+    pesos = [5 for _ in range(18, 26)] + [1 for _ in range(26, 61)]
+    return random.choices(range(18, 61), weights=pesos, k=1)[0]
+    
 def cria_docente():
     cpf = gerador_de_cpf()
     idade = gerar_idade_prof()
@@ -115,6 +135,26 @@ def cria_docente():
     titularidade = gerar_titularidade()
     return Docente(cpf, idade, raca, genero, nacionalidade, nome, titularidade)
 
+def cria_discente():
+    cpf = gerador_de_cpf()
+    idade = gerar_idade_aluno()
+    nome, genero = gerar_nome()
+    raca = gerar_raca()
+    nacionalidade = gerar_nacionalidade()
+
+    renda = random.randint(800, 10000)
+    pcd = "Sim" if random.random() < 0.05 else "Não" # 5% pcds
+    financiamento = random.random() < 0.10 # 10% tem bolsa
+    codigoEmec = random.randint(1000, 9999)
+    status = random.choices(
+        ['Ativo', 'Formado', 'Jubilado', 'Inativo'], 
+        weights=[77, 14, 3, 6], 
+        k=1)[0]
+    
+    anoMatricula = random.randint(2015, 2023)
+    CR = round(random.normalvariate(6.8, 1.2), 2)
+    return Discente(cpf, idade, raca, genero, nacionalidade, nome, renda, pcd, financiamento, codigoEmec, status, anoMatricula, CR)
+
 def escreve_docentes():
     with open("docentes_sql.txt", "w") as arquivo:
         lista = []
@@ -123,19 +163,39 @@ def escreve_docentes():
             while docente.cpf in lista:
                 docente = cria_docente
             lista.append(docente.cpf)
-            
+
             arquivo.write(
                 "INSERT INTO DOCENTE (nome, cpf, genero, idade, raca, nacionalidade, titularidade) "
                 f"VALUES ('{docente.nome}', '{docente.cpf}', '{docente.genero}', {docente.idade}, "
                 f"'{docente.raca}', '{docente.nacionalidade}', '{docente.titularidade}');\n"
             )
-    print("Todos os 10000 docentes foram criados.")
+    print("Todos os docentes foram criados com sucesso.")
+    return lista #apenas uma maracutaia para facilitar na criação de novos alunos
+
+def escreve_discentes(lista_cpfs):     
+    with open("discentes_sql.txt", "w") as arquivo:
+        lista = []
+        for i in range(200000):
+            discente = cria_discente()
+            while discente.cpf in lista or discente.cpf in lista_cpfs:
+                discente = cria_discente()
+            lista.append(discente.cpf)
+            arquivo.write(
+                "INSERT INTO DISCENTE (nome, cpf, genero, idade, raca, nacionalidade, renda, pcd, "
+                f"financiamento, codigoEmec, status, anoMatricula, CR) "
+                f"VALUES ('{discente.nome}', '{discente.cpf}', '{discente.genero}', {discente.idade}, "
+                f"'{discente.raca}', '{discente.nacionalidade}', {discente.renda}, '{discente.pcd}', "
+                f"{'1' if discente.financiamento else '0'}, {discente.codigoEmec}, '{discente.status}', "
+                f"{discente.anoMatricula}, {discente.CR});\n"
+            )
+        print("Todos os discentes foram criados com sucesso.")
 
 def main():
     #Fazendo um elemento da classe Docente
-    escreve_docentes()
-
-
+    #Quando for rodar, retirar o comentário
+    
+    cpfs = escreve_docentes()
+    escreve_discentes(cpfs)
 
 if __name__ == '__main__':
     main()
