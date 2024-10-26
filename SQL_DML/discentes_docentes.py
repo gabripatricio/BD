@@ -158,7 +158,7 @@ def cria_discente():
 def escreve_docentes():
     with open("docentes_sql.txt", "w") as arquivo:
         lista = []
-        for i in range(3000):
+        for i in range(3500):
             docente = cria_docente()
             while docente.cpf in lista:
                 docente = cria_docente
@@ -175,7 +175,7 @@ def escreve_docentes():
 def escreve_discentes(lista_cpfs):     
     with open("discentes_sql.txt", "w") as arquivo:
         lista = []
-        for i in range(12000):
+        for i in range(15000):
             discente = cria_discente()
             while discente.cpf in lista or discente.cpf in lista_cpfs:
                 discente = cria_discente()
