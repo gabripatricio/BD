@@ -34,8 +34,8 @@ Este projeto é inspirado nos dados coletados pelo **Censo da Educação Superio
 ## Arquitetura do Repositório
 
 - `README.md`: Documentação do projeto.
-- `SQL_DDL`: Códigos SQL DDL para criação das tabelas no PostgreSQL.
-- `SQL_DML`: Scripts SQL DML com as inserções de dados.
+- `/SQL_DDL`: Códigos SQL DDL para criação das tabelas no PostgreSQL.
+- `/SQL_DML`: Scripts SQL DML com as inserções de dados.
 - `relatorio.pdf`: Relatório completo com as respostas para cada questão do trabalho prático.
 
 ## Ferramentas e Tecnologias
