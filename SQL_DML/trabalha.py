@@ -30,7 +30,7 @@ def gera_tabela_trabalha(cpfs):
             salario_aleatorio = round(random.normalvariate(media, desvio_padrao))
             
             # Escrever a instrução SQL no arquivo
-            sql = f"INSERT INTO trabalha (cpf, codigoEMecIES, salario) VALUES ('{cpf}', {numero_aleatorio}, {salario_aleatorio});\n"
+            sql = f"INSERT INTO trabalha (cpf, codigoEMecIES, salário) VALUES ('{cpf}', {numero_aleatorio}, {salario_aleatorio});\n"
             arquivo.write(sql)
 
 # Exemplo de uso
