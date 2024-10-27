@@ -34,9 +34,8 @@ Este projeto é inspirado nos dados coletados pelo **Censo da Educação Superio
 ## Arquitetura do Repositório
 
 - `README.md`: Documentação do projeto.
-- `modelo_conceitual/`: Contém o diagrama ER e a descrição textual das entidades e relacionamentos.
-- `esquema_relacional/`: Códigos SQL DDL para criação das tabelas no PostgreSQL.
-- `insercao_dados/`: Scripts SQL DML com as inserções de dados.
+- `SQL_DDL`: Códigos SQL DDL para criação das tabelas no PostgreSQL.
+- `SQL_DML`: Scripts SQL DML com as inserções de dados.
 - `relatorio.pdf`: Relatório completo com as respostas para cada questão do trabalho prático.
 
 ## Ferramentas e Tecnologias
